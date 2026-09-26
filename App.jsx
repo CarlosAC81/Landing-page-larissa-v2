@@ -69,7 +69,7 @@ function HeroArtwork({ className, priority }) {
           fetchPriority={priority ? "high" : "auto"}
         />
       </div>
-      <div className="hero-sign"><span>Psicóloga</span><strong>Larissa Menezes</strong></div>
+      <div className="hero-sign"><span>Psicóloga | Psicanalista</span><strong>Larissa Menezes</strong></div>
     </div>
   );
 }
@@ -80,6 +80,21 @@ function App() {
 
   // Controla qual pergunta do FAQ está aberta.
   const [openFaq, setOpenFaq] = useState(0);
+  const [cardIndex, setCardIndex] = useState(0);
+  const cardsRef = useRef(null);
+  const scrollToCard = (index) => {
+    const list = cardsRef.current;
+    if (!list) return;
+    const next = Math.max(0, Math.min(3, index));
+    list.children[next]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    setCardIndex(next);
+  };
+  const handleCardsScroll = () => {
+    const list = cardsRef.current;
+    if (!list || !list.children.length) return;
+    const first = list.children[0];
+    setCardIndex(Math.min(3, Math.round(list.scrollLeft / (first.getBoundingClientRect().width + 14))));
+  };
 
   // Texto usado na animação de digitação do CTA do hero.
   const [typedText, setTypedText] = useState("");
@@ -222,9 +237,6 @@ function App() {
           elegante entre seções (o site é uma página única, sem rotas separadas). */}
       <div id="page-transition" className="page-transition" aria-hidden="true" />
 
-      {/* Brilho discreto que atravessa a tela na diagonal, a cada 7 segundos. */}
-      <div className="page-shine" aria-hidden="true" />
-
       {/* Cabeçalho semântico para navegação e SEO. */}
       <header className="site-header">
         <div className="container header-inner">
@@ -263,7 +275,7 @@ function App() {
 
           <div className="container">
             <div className="hero-content">
-              <p className="eyebrow hero-anim">✦ Psicologia clínica</p>
+              <p className="eyebrow hero-anim">✦ Psicologia Clínica & Psicanálise</p>
               <h1 id="hero-title" className="hero-anim">Um espaço para <em>você</em> se escutar.</h1>
               {/* Mobile: a foto aparece logo depois do título e antes da descrição. */}
               <HeroArtwork className="hero-mobile-visual" priority />
@@ -300,12 +312,17 @@ function App() {
           <div className="container section-grid">
             <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Clareza para entender. <em>Cuidado</em> para transformar.</h2></div>
             <div className="section-copy">
-              <div className="card intro-card" data-reveal><p>A Terapia Cognitivo-Comportamental é uma abordagem prática e colaborativa. Juntos, vamos observar a relação entre pensamentos, emoções e comportamentos para construir estratégias que façam sentido para a sua vida.</p></div>
-              <div className="cards">
-                <article className="card" data-reveal><span className="card-number">01</span><h3>Escuta sem pressa</h3><p>Um espaço para você chegar como está, com respeito à sua singularidade.</p></article>
-                <article className="card accent" data-reveal><span className="card-number">02</span><h3>Construção conjunta</h3><p>Objetivos claros e ferramentas para levar o cuidado para a rotina.</p></article>
+              <div className="cards" ref={cardsRef} onScroll={handleCardsScroll} aria-label="Abordagem e atendimentos">
+                <article className="card intro-card" data-reveal><span className="card-number">01</span><h3>Terapia Cognitivo-Comportamental</h3><p>A Terapia Cognitivo-Comportamental é uma abordagem prática e colaborativa. Juntos, vamos observar a relação entre pensamentos, emoções e comportamentos para construir estratégias que façam sentido para a sua vida.</p></article>
+                <article className="card" data-reveal><span className="card-number">02</span><h3>Escuta sem pressa</h3><p>Um espaço para você chegar como está, com respeito à sua singularidade.</p></article>
+                <article className="card accent" data-reveal><span className="card-number">03</span><h3>Construção conjunta</h3><p>Objetivos claros e ferramentas para levar o cuidado para a rotina.</p></article>
+                <article className="card online-card" data-reveal><span className="card-number">04</span><h3>Terapia online</h3><p>Sessões exclusivamente online, com conforto, privacidade e flexibilidade para cuidar de si onde estiver.</p></article>
               </div>
-              <article className="card online-card" data-reveal><span className="card-number">◎</span><h3>Terapia online</h3><p>Sessões exclusivamente online, com conforto, privacidade e flexibilidade para cuidar de si onde estiver.</p></article>
+              <div className="card-controls" aria-label="Controles dos atendimentos">
+                <button type="button" aria-label="Card anterior" disabled={cardIndex === 0} onClick={() => scrollToCard(cardIndex - 1)}>←</button>
+                <span>{String(cardIndex + 1).padStart(2, "0")} / 04</span>
+                <button type="button" aria-label="Próximo card" disabled={cardIndex === 3} onClick={() => scrollToCard(cardIndex + 1)}>→</button>
+              </div>
             </div>
           </div>
         </section>
