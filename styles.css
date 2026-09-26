@@ -1,0 +1,411 @@
+/* ==============================
+   VARIÁVEIS GLOBAIS DA MARCA
+   ============================== */
+:root {
+  /* Paleta fornecida para a identidade visual da psicóloga. */
+  --yellow-soft: #FFFAE5;
+  --yellow: #FCEA96;
+  --blue-soft: #D1E3EB;
+  --green: #B4BE64;
+  --blue: #97B7E5;
+  --navy: #092435;
+  --white: #FFFFFF;
+
+  /* Fontes usadas nos títulos e textos corridos. */
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-body: "DM Sans", Arial, sans-serif;
+
+  /* Curva de animação rápida e suave. */
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+}
+
+/* Reset básico para evitar diferenças entre navegadores. */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--yellow-soft); color: var(--navy); font-family: var(--font-body); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* Container centralizado que controla a largura do conteúdo. */
+.container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+/* ==============================
+   TRANSIÇÃO EM DEGRADÊ ENTRE SEÇÕES
+   Como o site é uma página única (sem rotas separadas), a "transição entre
+   páginas" acontece de duas formas: uma cortina suave ao carregar o site, e
+   um leve flash a cada clique num link do menu — dando a sensação de uma
+   passagem elegante, sem cortes bruscos.
+   ============================== */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: linear-gradient(135deg, var(--blue-soft), var(--yellow-soft) 55%, var(--yellow));
+  opacity: 1;
+  transition: opacity .6s var(--ease-out);
+}
+.page-transition.is-hidden { opacity: 0; }
+.page-transition.is-flash { transition: opacity .28s var(--ease-out); }
+.page-transition.is-flash.is-flash-visible { opacity: .55; }
+
+/* ==============================
+   BRILHO DIAGONAL NO FUNDO
+   Um "glow" bem discreto atravessa a tela na diagonal a cada 7s, durando
+   cerca de 1s, e depois some — sem manchas ou formas fixas no fundo.
+   ============================== */
+.page-shine {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 40;
+  background: linear-gradient(135deg, transparent 46%, rgba(255,255,255,.4) 50%, transparent 54%);
+  transform: translate(-55%, -55%);
+  animation: page-shine-sweep 7s linear infinite;
+  mix-blend-mode: screen;
+}
+@keyframes page-shine-sweep {
+  0%   { transform: translate(-55%, -55%); }
+  14%  { transform: translate(55%, 55%); }
+  100% { transform: translate(55%, 55%); }
+}
+
+/* ==============================
+   CABEÇALHO E NAVEGAÇÃO (MENU FLUTUANTE)
+   ============================== */
+.site-header {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 50;
+  border-radius: 24px;
+  background: rgba(255,250,229,.88);
+  border: 1px solid rgba(9,36,53,.08);
+  box-shadow: 0 10px 30px rgba(9,36,53,.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: box-shadow .3s ease;
+}
+.header-inner { height: 88px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; }
+.logo { font-family: var(--font-display); font-size: 26px; letter-spacing: -.05em; transition: opacity .2s ease; }
+.logo:hover { opacity: .78; }
+.logo span { color: var(--green); }
+
+/* Os links do menu ficam discretos e aparecem juntos, sincronizados, quando
+   o mouse passa sobre a barra flutuante. */
+.main-nav { display: flex; gap: 30px; color: rgba(9,36,53,.7); font-size: 14px; }
+.main-nav a {
+  position: relative;
+  padding-bottom: 3px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity .3s var(--ease-out), color .2s ease, transform .3s var(--ease-out);
+}
+.main-nav a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--green); transition: right .25s var(--ease-out); }
+.main-nav a:hover { color: var(--green); }
+.main-nav a:hover::after { right: 0; }
+.header-inner:hover .main-nav a,
+.header-inner:focus-within .main-nav a { opacity: 1; transform: translateY(0); }
+
+.header-button {
+  padding: 13px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--navy), #0d3049);
+  color: var(--yellow-soft);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(9,36,53,.22);
+  transition: transform .2s var(--ease-out), box-shadow .2s ease;
+}
+.header-button:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(9,36,53,.3); }
+.menu-button { display: none; border: 0; background: transparent; color: var(--navy); font-size: 26px; cursor: pointer; }
+.mobile-menu { display: none; }
+
+/* ==============================
+   HERO COM ESPAÇO PARA A FOTO
+   ============================== */
+.hero { position: relative; min-height: 760px; padding: 150px 0 90px; overflow: hidden; background: var(--blue-soft); }
+.hero-content { position: relative; z-index: 1; max-width: 560px; }
+.hero-visual { position: absolute; top: 150px; right: 4.5%; bottom: 110px; z-index: 1; display: block; width: min(40vw, 540px); pointer-events: none; }
+.hero-svg { display: block; width: 100%; height: 100%; min-height: 0; overflow: hidden; border-radius: 34px; box-shadow: 0 22px 48px rgba(9,36,53,.16); }
+.hero-photo-wrap { position: relative; }
+.hero-photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.06); transform-origin: center; will-change: transform; }
+.hero-mobile-visual { display: none; }
+.hero-sign { position: absolute; right: 24px; bottom: 22px; display: grid; gap: 3px; padding: 13px 18px; border: 1px solid rgba(9,36,53,.1); border-radius: 18px; background: rgba(255,250,229,.94); color: var(--navy); box-shadow: 0 10px 22px rgba(9,36,53,.15); }
+.hero-sign span { color: rgba(9,36,53,.58); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.hero-sign strong { font-family: var(--font-display); font-size: 23px; font-weight: 400; }
+.eyebrow { display: inline-flex; padding: 9px 15px; border: 1px solid rgba(9,36,53,.14); border-radius: 999px; background: rgba(255,250,229,.72); color: var(--blue); font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; }
+h1 { max-width: 600px; margin: 34px 0 0; font-size: clamp(58px, 8vw, 104px); line-height: .9; letter-spacing: -.07em; }
+em { color: var(--green); }
+.hero-description { max-width: 440px; margin: 34px 0 0; color: rgba(9,36,53,.68); font-size: 18px; line-height: 1.75; }
+.hero-actions { display: flex; flex-direction: column; align-items: flex-start; margin-top: 34px; }
+.primary-button { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 999px; background: var(--green); color: var(--white); font-size: 14px; font-weight: 700; box-shadow: 0 12px 24px rgba(180,190,100,.3); transition: transform .2s var(--ease-out), background .2s ease, box-shadow .2s ease; }
+.primary-button:hover { transform: translateY(-3px); background: #99A747; box-shadow: 0 16px 30px rgba(180,190,100,.4); }
+.whatsapp-type { display: inline-flex; align-items: center; gap: 9px; margin-top: 18px; padding: 11px 15px; border-radius: 999px; background: rgba(255,250,229,.84); color: var(--green); font-size: 14px; font-weight: 700; box-shadow: 0 4px 15px rgba(9,36,53,.08); transition: transform .2s var(--ease-out), box-shadow .2s ease; }
+.whatsapp-type:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(9,36,53,.14); }
+.type-cursor { width: 1px; height: 17px; background: currentColor; animation: blink .8s steps(2, start) infinite; }
+.secondary-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 18px; border-bottom: 1px solid rgba(9,36,53,.25); padding-bottom: 7px; font-size: 14px; font-weight: 700; transition: color .2s ease; }
+.secondary-link:hover { color: var(--green); }
+.hero-note { display: flex; align-items: center; gap: 9px; margin-top: 54px; color: rgba(9,36,53,.55); font-size: 12px; }
+
+/* ==============================
+   VÍDEO E APRESENTAÇÃO
+   ============================== */
+.section-video { background: var(--yellow-soft); }
+.video-heading { max-width: 520px; margin-bottom: 38px; }
+.video-heading h2 { margin: 0; font-size: clamp(54px, 7vw, 84px); line-height: .95; letter-spacing: -.06em; }
+.about-copy { max-width: 650px; }
+.professional-note { margin-top: 30px; color: var(--navy); }
+.professional-note strong { font-family: var(--font-display); font-size: 25px; font-weight: 400; }
+
+/* ==============================
+   SEÇÕES INTERNAS E TÍTULOS EM DESTAQUE
+   ============================== */
+.section { padding: 120px 0; }
+.section-blue { background: var(--blue-soft); }
+.section-yellow { background: var(--yellow); }
+.section-dark { background: var(--navy); color: var(--yellow-soft); }
+.section-grid { display: grid; grid-template-columns: .7fr 1.3fr; gap: 80px; align-items: start; }
+
+/* Rótulos maiores, com mais peso e um traço de destaque — usados em "Conheça
+   meu trabalho", "Abordagem e atendimentos", "Experiências", "Antes de
+   começar" e "Um primeiro passo". */
+.section-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding-left: 16px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.section-label::before { content: ""; position: absolute; left: 0; top: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--green); transform: translateY(-50%); }
+.section h2 { max-width: 520px; margin: 0; font-size: clamp(54px, 7vw, 84px); line-height: .95; letter-spacing: -.06em; }
+.section-copy { max-width: 650px; color: rgba(9,36,53,.68); font-size: 18px; line-height: 1.8; }
+.section-dark .section-copy { color: rgba(255,250,229,.68); }
+.section-dark .section-label { color: var(--yellow-soft); }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 35px; }
+.stat { padding: 22px; border-radius: 22px; background: rgba(255,255,255,.52); transition: transform .25s var(--ease-out), box-shadow .25s ease; }
+.stat:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(9,36,53,.1); }
+.stat strong { display: block; font-family: var(--font-display); font-size: 32px; font-weight: 400; }
+.stat small { color: rgba(9,36,53,.58); }
+
+/* ==============================
+   CARDS — "ABORDAGEM E ATENDIMENTOS"
+   Design mais elaborado, com crescimento suave, elevação sobre os demais
+   elementos e uma borda com brilho em degradê ao passar o mouse.
+   ============================== */
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+.card {
+  position: relative;
+  isolation: isolate;
+  padding: 30px;
+  border-radius: 28px;
+  background: rgba(255,250,229,.82);
+  box-shadow: 0 8px 20px rgba(9,36,53,.06);
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, var(--blue), var(--green), var(--yellow), var(--blue));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.card:hover { transform: translateY(-8px) scale(1.035); box-shadow: 0 26px 50px rgba(9,36,53,.18); z-index: 5; }
+.card:hover::after { opacity: 1; }
+.card.accent { background: var(--green); color: var(--white); }
+.card.accent:hover { box-shadow: 0 26px 50px rgba(180,190,100,.4); }
+.card-number { font-family: var(--font-display); font-size: 52px; }
+.card h3 { margin: 46px 0 10px; font-size: 30px; }
+.card p { margin: 0; color: rgba(9,36,53,.62); line-height: 1.65; }
+.card.accent p { color: rgba(255,255,255,.8); }
+.online-card { margin-top: 16px; background: rgba(255,250,229,.72); }
+.intro-card { margin-bottom: 30px; background: rgba(255,255,255,.6); }
+.intro-card p { font-size: 18px; line-height: 1.8; color: rgba(9,36,53,.68); }
+
+/* FAQ com respostas controladas pelo React. */
+.faq-list { border-top: 1px solid rgba(9,36,53,.18); }
+.faq-item { border-bottom: 1px solid rgba(9,36,53,.18); }
+.faq-question { width: 100%; display: flex; justify-content: space-between; padding: 22px 0; border: 0; background: transparent; color: inherit; text-align: left; font-weight: 700; cursor: pointer; transition: color .2s ease; }
+.faq-question:hover { color: var(--green); }
+.faq-question span { transition: transform .2s var(--ease-out); }
+.faq-question:hover span { transform: scale(1.15); }
+.faq-answer { margin: -4px 0 22px; color: rgba(9,36,53,.65); line-height: 1.7; animation: faq-in .3s var(--ease-out) both; }
+
+/* Botão flutuante que permanece acessível durante a rolagem. */
+.floating-whatsapp { position: fixed; right: 22px; bottom: 22px; z-index: 20; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: #25D366; color: white; box-shadow: 0 12px 28px rgba(37,211,102,.34); transition: transform .2s var(--ease-out); animation: whats-pulse 10s ease-in-out infinite; }
+.floating-whatsapp:hover { transform: translateY(-4px) scale(1.04); }
+@keyframes whats-pulse {
+  0%, 90% { transform: scale(1); box-shadow: 0 12px 28px rgba(37,211,102,.34); }
+  93% { transform: scale(1.16); box-shadow: 0 12px 28px rgba(37,211,102,.34), 0 0 0 12px rgba(37,211,102,.22); }
+  96% { transform: scale(.95); box-shadow: 0 12px 28px rgba(37,211,102,.34), 0 0 0 4px rgba(37,211,102,.1); }
+  100% { transform: scale(1); box-shadow: 0 12px 28px rgba(37,211,102,.34); }
+}
+
+/* ==============================
+   RODAPÉ E ANIMAÇÕES
+   ============================== */
+.site-footer { padding: 32px 0; background: var(--navy); color: rgba(255,250,229,.62); }
+.footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.instagram-link { display: inline-flex; align-items: center; gap: 9px; color: var(--yellow-soft); transition: color .2s ease, transform .2s var(--ease-out); }
+.instagram-link:hover { color: var(--green); transform: translateY(-2px); }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes faq-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Entrada suave de cada item do menu mobile, em cascata. */
+@keyframes menu-drop { from { opacity: 0; transform: translateY(-10px) scaleY(.97); } to { opacity: 1; transform: translateY(0) scaleY(1); } }
+@keyframes menu-item-in { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Botão "Agendar conversa" do menu mobile: pisca, fica verde e volta ao
+   normal — igual ao comportamento do ícone do WhatsApp. Roda de novo a cada
+   clique (o React remonta o elemento e a animação reinicia). */
+@keyframes cta-attention {
+  0%, 100% { background: var(--navy); box-shadow: none; }
+  8%, 24%, 40% { background: var(--navy); }
+  16%, 32% { background: rgba(9,36,53,.35); }
+  55% { background: #25D366; box-shadow: 0 0 0 8px rgba(37,211,102,.22); }
+  85% { background: #25D366; box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+}
+
+/* ==============================
+   RESPONSIVIDADE
+   ============================== */
+@media (max-width: 760px) {
+  .container { width: min(100% - 32px, 560px); }
+  .site-header { top: 10px; left: 10px; right: 10px; border-radius: 20px; }
+  .header-inner { height: 74px; }
+  .main-nav, .header-button { display: none; }
+  .menu-button { display: block; }
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 20px 20px 26px;
+    background: var(--yellow-soft);
+    border-top: 1px solid rgba(9,36,53,.12);
+    border-radius: 0 0 20px 20px;
+    animation: menu-drop .5s var(--ease-out) both;
+  }
+  .mobile-menu a { padding: 10px 0; font-size: 14px; opacity: 0; animation: menu-item-in .45s var(--ease-out) both; }
+  .mobile-menu a:nth-child(1) { animation-delay: .06s; }
+  .mobile-menu a:nth-child(2) { animation-delay: .14s; }
+  .mobile-menu a:nth-child(3) { animation-delay: .22s; }
+  .mobile-menu a:nth-child(4) { animation-delay: .30s; }
+  .mobile-menu .mobile-cta {
+    margin-top: 10px;
+    padding: 14px;
+    width: 100%;
+    border-radius: 999px;
+    background: var(--navy);
+    color: var(--yellow-soft);
+    text-align: center;
+    font-weight: 700;
+    animation: menu-item-in .45s var(--ease-out) both .38s, cta-attention 1.8s ease-in-out .85s 1 both;
+  }
+  .hero { min-height: 0; padding: 130px 0 70px; }
+  .hero-visual { display: none; }
+  .hero-mobile-visual { position: relative; display: block; width: 100%; height: 430px; margin-top: 28px; pointer-events: none; }
+  .hero-mobile-visual .hero-svg { height: 100%; border-radius: 26px; }
+  .hero-mobile-visual .hero-photo { border-radius: 19px; transform: scale(1.02); }
+  .hero-mobile-visual .hero-sign { right: 16px; bottom: 16px; padding: 11px 14px; border-radius: 15px; }
+  .hero-mobile-visual .hero-sign strong { font-size: 20px; }
+  h1 { font-size: clamp(54px, 16vw, 78px); }
+  .hero-description { font-size: 16px; }
+  .section { padding: 85px 0; }
+  .section-grid { grid-template-columns: 1fr; gap: 35px; }
+  .stats { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
+
+  /* Cards de "Abordagem e atendimentos": deslizáveis com o dedo no mobile,
+     como um carrossel, sem prejudicar a rolagem vertical da página. */
+  .cards {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin: 24px -16px 0;
+    padding: 4px 16px 10px;
+  }
+  .cards .card { flex: 0 0 82%; scroll-snap-align: start; }
+  .card:hover { transform: none; box-shadow: 0 8px 20px rgba(9,36,53,.06); }
+  .card:active { transform: scale(.98); }
+}
+
+/* Usuários que preferem menos movimento não recebem animações decorativas.
+   As animações de entrada/rolagem via GSAP já são desligadas em JS (gsap.matchMedia),
+   esta regra cobre as transições e keyframes puramente em CSS. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .main-nav a { opacity: 1; transform: none; }
+  .page-shine { display: none; }
+}
+
+/* ==============================
+   CARROSSEL DE FEEDBACKS
+   Entrada com leve rotação 3D a cada troca, para transmitir a sensação de
+   um carrossel realmente girando (não apenas "aparecendo").
+   ============================== */
+.feedback-section { background: var(--yellow-soft); }
+.feedback-layout { display: grid; grid-template-columns: .7fr 1.3fr; gap: 80px; align-items: start; }
+.feedback-carousel { max-width: 650px; perspective: 1400px; }
+.feedback-card {
+  position: relative;
+  min-height: 245px;
+  padding: 42px 46px 34px;
+  border-radius: 30px;
+  background: var(--navy);
+  color: var(--yellow-soft);
+  box-shadow: 0 20px 45px rgba(9,36,53,.14);
+  transition: transform .3s var(--ease-out), box-shadow .3s ease;
+  transform-style: preserve-3d;
+  touch-action: pan-y;
+  animation: carousel-spin-in .65s var(--ease-out) both;
+}
+.feedback-card:hover { transform: translateY(-4px); box-shadow: 0 26px 52px rgba(9,36,53,.2); }
+@keyframes carousel-spin-in {
+  0%   { opacity: 0; transform: rotateY(30deg) translateX(6%) scale(.94); }
+  100% { opacity: 1; transform: rotateY(0deg) translateX(0) scale(1); }
+}
+.feedback-quote { position: absolute; top: 12px; left: 28px; color: var(--green); font-family: var(--font-display); font-size: 78px; line-height: 1; }
+.feedback-card p { margin: 20px 0 28px; font-family: var(--font-display); font-size: clamp(24px, 3vw, 34px); line-height: 1.12; }
+.feedback-card strong, .feedback-card small { display: block; }
+.feedback-card strong { color: white; font-size: 14px; }
+.feedback-card small { margin-top: 5px; color: rgba(255,250,229,.6); font-size: 12px; }
+.feedback-controls { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin-top: 16px; color: rgba(9,36,53,.62); font-size: 12px; }
+.feedback-controls button { width: 38px; height: 38px; border: 1px solid rgba(9,36,53,.18); border-radius: 50%; background: transparent; color: var(--navy); font-size: 18px; transition: background .2s ease, color .2s ease, transform .2s ease; }
+.feedback-controls button:hover { background: var(--navy); color: var(--yellow-soft); transform: translateY(-2px); }
+@media (max-width: 760px) {
+  .hero-mobile-visual { order: 0; height: 300px; margin: 28px 0 30px; }
+  .hero-description { order: 1; }
+  .feedback-layout { grid-template-columns: 1fr; gap: 35px; }
+  .feedback-card { min-height: 215px; padding: 38px 26px 28px; border-radius: 24px; }
+  .feedback-card p { font-size: 25px; }
+}
+
+/* ==============================
+   ACESSIBILIDADE — FOCO VISÍVEL
+   ============================== */
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
