@@ -45,6 +45,18 @@ function ArrowIcon() {
   return <span aria-hidden="true">↗</span>;
 }
 
+// Fundo decorativo com formas orgânicas ("blobs") flutuando devagar atrás do
+// conteúdo. Puramente visual: aria-hidden e sem interferir em cliques.
+function SectionBackground({ variant }) {
+  return (
+    <div className={`section-bg section-bg-${variant}`} aria-hidden="true">
+      <span className="blob blob-a" />
+      <span className="blob blob-b" />
+      {variant !== "hero" && <span className="blob blob-c" />}
+    </div>
+  );
+}
+
 // Rótulo visual usado no início das seções.
 function SectionLabel({ children }) {
   return <p className="section-label">{children}</p>;
@@ -207,7 +219,8 @@ function App() {
 
       <main id="top">
         {/* Hero usando a foto real enviada pela profissional. */}
-        <section className="hero" aria-labelledby="hero-title">
+        <section className="hero has-bg" aria-labelledby="hero-title">
+          <SectionBackground variant="hero" />
           {/* Desktop: a arte fica menor e separada da coluna de texto. */}
           <HeroArtwork className="hero-visual" priority />
 
@@ -230,7 +243,8 @@ function App() {
         </section>
 
         {/* Seção de apresentação (o vídeo foi removido a pedido). */}
-        <section id="sobre" className="section section-video" aria-labelledby="sobre-title" data-reveal-group>
+        <section id="sobre" className="section section-video has-bg" aria-labelledby="sobre-title" data-reveal-group>
+          <SectionBackground variant="sobre" />
           <div className="container">
             <div className="video-heading" data-reveal>
               <SectionLabel>Conheça meu trabalho</SectionLabel>
@@ -246,7 +260,8 @@ function App() {
         </section>
 
         {/* Abordagem e atendimento agora formam uma única seção. */}
-        <section id="atendimento" className="section section-blue" aria-labelledby="atendimento-title" data-reveal-group>
+        <section id="atendimento" className="section section-blue has-bg" aria-labelledby="atendimento-title" data-reveal-group>
+          <SectionBackground variant="atendimento" />
           <div className="container section-grid">
             <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Clareza para entender. <em>Cuidado</em> para transformar.</h2></div>
             <div className="section-copy">
@@ -261,7 +276,8 @@ function App() {
         </section>
 
         {/* Feedbacks editáveis em carrossel; substitua os textos pelos depoimentos autorizados. */}
-        <section id="feedbacks" className="section feedback-section" aria-labelledby="feedbacks-title" data-reveal-group>
+        <section id="feedbacks" className="section feedback-section has-bg" aria-labelledby="feedbacks-title" data-reveal-group>
+          <SectionBackground variant="feedbacks" />
           <div className="container feedback-layout">
             <div data-reveal><SectionLabel>Experiências</SectionLabel><h2 id="feedbacks-title">Palavras que <em>acolhem.</em></h2></div>
             <div className="feedback-carousel" data-reveal aria-roledescription="carrossel" aria-label="Feedbacks de pacientes">
@@ -281,7 +297,8 @@ function App() {
         </section>
 
         {/* FAQ interativo para responder dúvidas comuns antes do contato. */}
-        <section id="duvidas" className="section section-yellow" aria-labelledby="duvidas-title" data-reveal-group>
+        <section id="duvidas" className="section section-yellow has-bg" aria-labelledby="duvidas-title" data-reveal-group>
+          <SectionBackground variant="duvidas" />
           <div className="container section-grid">
             <div data-reveal><SectionLabel>Antes de começar</SectionLabel><h2 id="duvidas-title">Dúvidas <em>comuns.</em></h2></div>
             <div className="faq-list">
@@ -296,7 +313,8 @@ function App() {
         </section>
 
         {/* CTA final para aumentar as chances de contato. */}
-        <section className="section section-dark" aria-labelledby="cta-title" data-reveal-group>
+        <section className="section section-dark has-bg" aria-labelledby="cta-title" data-reveal-group>
+          <SectionBackground variant="cta" />
           <div className="container section-grid">
             <div data-reveal><SectionLabel>Um primeiro passo</SectionLabel><h2 id="cta-title">Você não precisa ter todas as respostas para <em>começar.</em></h2></div>
             <div className="section-copy" data-reveal><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
