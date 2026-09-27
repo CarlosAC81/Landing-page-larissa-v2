@@ -148,7 +148,7 @@ function App() {
 
   // Perguntas e respostas frequentes exibidas na seção de dúvidas.
   const faqItems = [
-    { question: "Como funciona a primeira sessão?", answer: "A primeira sessão é um momento de conversa e acolhimento. Vamos entender o que trouxe você até aqui, conhecer suas expectativas e combinar juntos os próximos passos — com leveza e sem pressa." },
+    { question: "Como funciona a primeira sessão?", answer: "A primeira sessão é um momento de conversa e acolhimento. Vamos entender o que trouxe você até aqui, conhecer suas expectativas e combinar juntos os próximos passos." },
     { question: "Quanto tempo dura o processo terapêutico?", answer: "Cada processo é único e não existe um tempo pré-determinado. A duração da terapia depende das necessidades e objetivos do paciente, enquanto acompanhando seus avanços ao longo do caminho." },
     { question: "A terapia online é para mim?", answer: "A psicoterapia online pode ser uma ótima opção para quem busca praticidade e conforto. As sessões acontecem por videochamada, em um ambiente reservado, onde você se sinta confortável para falar sobre o que precisar." },
     { question: "Como agendo um horário?", answer: "Para agendar sua primeira sessão, é só entrar em contato diretamente comigo pelo meu WhatsApp. Vamos conversar sobre sua disponibilidade e encontrar um horário que funcione para você." }
