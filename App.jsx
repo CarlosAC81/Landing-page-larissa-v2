@@ -382,7 +382,7 @@ function App() {
             <div className="section-copy about-copy" data-reveal>
               <p>Olá, eu sou Larissa. Psicóloga formada pela Universidade Presbiteriana Mackenzie e especializada em Psicanálise pelo Núcleo Brasileiro de Psicanálise. Acredito que olhar para dentro é permitir-se transformar a forma como vivemos. 
 … para que você possa compreender seus padrões, elaborar o que passou e aprender formas saudáveis de lidar com seus sentimentos.</p>
-              <p className="professional-note"><strong>CRP 06/220176</strong> · Psicóloga clínica</p>
+              <p className="professional-note"><strong>CRP 06/220176</strong> · Psicóloga Clínica</p>
             </div>
           </div>
         </section>
