@@ -82,12 +82,27 @@ function App() {
   const [openFaq, setOpenFaq] = useState(0);
   const [cardIndex, setCardIndex] = useState(0);
   const cardsRef = useRef(null);
+  // Guarda o sentido atual (1 = direita, -1 = esquerda) e se a rolagem automática
+  // dos cards está pausada (por toque, clique nas setas ou hover do mouse).
+  const cardsAutoScrollRef = useRef({ direction: 1, paused: false, resumeTimer: null });
+  const pauseCardsAutoScroll = () => {
+    cardsAutoScrollRef.current.paused = true;
+    window.clearTimeout(cardsAutoScrollRef.current.resumeTimer);
+  };
+  const scheduleCardsAutoScrollResume = () => {
+    window.clearTimeout(cardsAutoScrollRef.current.resumeTimer);
+    cardsAutoScrollRef.current.resumeTimer = window.setTimeout(() => {
+      cardsAutoScrollRef.current.paused = false;
+    }, 2600);
+  };
   const scrollToCard = (index) => {
     const list = cardsRef.current;
     if (!list) return;
+    pauseCardsAutoScroll();
     const next = Math.max(0, Math.min(3, index));
     list.children[next]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
     setCardIndex(next);
+    scheduleCardsAutoScrollResume();
   };
   const handleCardsScroll = () => {
     const list = cardsRef.current;
@@ -95,6 +110,57 @@ function App() {
     const first = list.children[0];
     setCardIndex(Math.min(3, Math.round(list.scrollLeft / (first.getBoundingClientRect().width + 14))));
   };
+
+  // Faz os cards de "Abordagem e atendimentos" rolarem sozinhos, bem devagar,
+  // e voltarem no mesmo ritmo ao chegar no fim (vai e volta). Continua sendo
+  // possível passar o dedo ou usar as setas a qualquer momento — a rolagem
+  // automática pausa nessas horas e retoma sozinha alguns segundos depois.
+  useEffect(() => {
+    const list = cardsRef.current;
+    if (!list) return undefined;
+    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return undefined;
+
+    const speed = 0.4; // pixels por quadro — bem lento
+    let rafId = null;
+
+    const step = () => {
+      const state = cardsAutoScrollRef.current;
+      if (!state.paused) {
+        const max = list.scrollWidth - list.clientWidth;
+        if (max > 1) {
+          let next = list.scrollLeft + speed * state.direction;
+          if (next >= max) { next = max; state.direction = -1; }
+          else if (next <= 0) { next = 0; state.direction = 1; }
+          list.scrollLeft = next;
+        }
+      }
+      rafId = window.requestAnimationFrame(step);
+    };
+
+    const handleInteractionStart = () => pauseCardsAutoScroll();
+    const handleInteractionEnd = () => scheduleCardsAutoScrollResume();
+
+    list.addEventListener("touchstart", handleInteractionStart, { passive: true });
+    list.addEventListener("touchend", handleInteractionEnd, { passive: true });
+    list.addEventListener("pointerdown", handleInteractionStart);
+    list.addEventListener("mouseenter", handleInteractionStart);
+    list.addEventListener("mouseleave", handleInteractionEnd);
+    window.addEventListener("pointerup", handleInteractionEnd);
+
+    rafId = window.requestAnimationFrame(step);
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+      window.clearTimeout(cardsAutoScrollRef.current.resumeTimer);
+      list.removeEventListener("touchstart", handleInteractionStart);
+      list.removeEventListener("touchend", handleInteractionEnd);
+      list.removeEventListener("pointerdown", handleInteractionStart);
+      list.removeEventListener("mouseenter", handleInteractionStart);
+      list.removeEventListener("mouseleave", handleInteractionEnd);
+      window.removeEventListener("pointerup", handleInteractionEnd);
+    };
+  }, []);
 
   // Texto usado na animação de digitação do CTA do hero.
   const [typedText, setTypedText] = useState("");
