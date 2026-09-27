@@ -82,8 +82,7 @@ function App() {
   const [openFaq, setOpenFaq] = useState(0);
   const [cardIndex, setCardIndex] = useState(0);
   const cardsRef = useRef(null);
-  // Guarda o sentido atual (1 = direita, -1 = esquerda) e se a rolagem automática
-  // dos cards está pausada (por toque, clique nas setas ou hover do mouse).
+  // Guarda o sentido atual (1 = direita, -1 = esquerda) e as pausas por interação.
   const cardsAutoScrollRef = useRef({ direction: 1, paused: false, resumeTimer: null });
   const pauseCardsAutoScroll = () => {
     cardsAutoScrollRef.current.paused = true;
@@ -100,7 +99,8 @@ function App() {
     if (!list) return;
     pauseCardsAutoScroll();
     const next = Math.max(0, Math.min(3, index));
-    list.children[next]?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    const card = list.children[next];
+    if (card) list.scrollTo({ left: Math.min(card.offsetLeft - list.children[0].offsetLeft, list.scrollWidth - list.clientWidth), behavior: "smooth" });
     setCardIndex(next);
     scheduleCardsAutoScrollResume();
   };
@@ -108,33 +108,33 @@ function App() {
     const list = cardsRef.current;
     if (!list || !list.children.length) return;
     const first = list.children[0];
-    setCardIndex(Math.min(3, Math.round(list.scrollLeft / (first.getBoundingClientRect().width + 14))));
+    const gap = parseFloat(window.getComputedStyle(list).columnGap) || 0;
+    setCardIndex(Math.min(3, Math.round(list.scrollLeft / (first.getBoundingClientRect().width + gap))));
   };
 
-  // Faz os cards de "Abordagem e atendimentos" rolarem sozinhos, bem devagar,
-  // e voltarem no mesmo ritmo ao chegar no fim (vai e volta). Continua sendo
-  // possível passar o dedo ou usar as setas a qualquer momento — a rolagem
-  // automática pausa nessas horas e retoma sozinha alguns segundos depois.
+  // Movimento contínuo em ambas as telas; retorna suavemente quando chega ao fim.
+  // A posição é calculada pelo tempo decorrido para manter a velocidade constante.
   useEffect(() => {
     const list = cardsRef.current;
     if (!list) return undefined;
     const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return undefined;
 
-    const speed = 0.4; // pixels por quadro — bem lento
+    const speed = 30; // pixels por segundo
     let rafId = null;
-
-    const step = () => {
-      const state = cardsAutoScrollRef.current;
-      if (!state.paused) {
+    let lastTime = null;
+    const step = (time) => {
+      if (lastTime !== null && !cardsAutoScrollRef.current.paused) {
         const max = list.scrollWidth - list.clientWidth;
         if (max > 1) {
-          let next = list.scrollLeft + speed * state.direction;
-          if (next >= max) { next = max; state.direction = -1; }
-          else if (next <= 0) { next = 0; state.direction = 1; }
-          list.scrollLeft = next;
+          const state = cardsAutoScrollRef.current;
+          const next = list.scrollLeft + Math.min(time - lastTime, 50) * speed / 1000 * state.direction;
+          if (next >= max) { list.scrollLeft = max; state.direction = -1; }
+          else if (next <= 0) { list.scrollLeft = 0; state.direction = 1; }
+          else list.scrollLeft = next;
         }
       }
+      lastTime = time;
       rafId = window.requestAnimationFrame(step);
     };
 
@@ -144,10 +144,7 @@ function App() {
     list.addEventListener("touchstart", handleInteractionStart, { passive: true });
     list.addEventListener("touchend", handleInteractionEnd, { passive: true });
     list.addEventListener("pointerdown", handleInteractionStart);
-    list.addEventListener("mouseenter", handleInteractionStart);
-    list.addEventListener("mouseleave", handleInteractionEnd);
     window.addEventListener("pointerup", handleInteractionEnd);
-
     rafId = window.requestAnimationFrame(step);
 
     return () => {
@@ -156,8 +153,6 @@ function App() {
       list.removeEventListener("touchstart", handleInteractionStart);
       list.removeEventListener("touchend", handleInteractionEnd);
       list.removeEventListener("pointerdown", handleInteractionStart);
-      list.removeEventListener("mouseenter", handleInteractionStart);
-      list.removeEventListener("mouseleave", handleInteractionEnd);
       window.removeEventListener("pointerup", handleInteractionEnd);
     };
   }, []);
@@ -375,7 +370,7 @@ function App() {
 
         {/* Abordagem e atendimento agora formam uma única seção. */}
         <section id="atendimento" className="section section-blue" aria-labelledby="atendimento-title" data-reveal-group>
-          <div className="container section-grid">
+          <div className="container approach-layout">
             <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Profissionalismo com acolhimento. <em>Técnica</em> com humanidade.</h2></div>
             <div className="section-copy">
               <div className="cards" ref={cardsRef} onScroll={handleCardsScroll} aria-label="Abordagem e atendimentos">
@@ -436,9 +431,13 @@ function App() {
 
         {/* CTA final para aumentar as chances de contato. */}
         <section className="section section-dark" aria-labelledby="cta-title" data-reveal-group>
-          <div className="container section-grid">
-            <div data-reveal><SectionLabel>Um primeiro passo</SectionLabel><h2 id="cta-title">Você não precisa ter todas as respostas para <em>começar.</em></h2></div>
-            <div className="section-copy" data-reveal><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
+          <div className="container closing-layout">
+            <div className="closing-content" data-reveal>
+              <SectionLabel>Um primeiro passo</SectionLabel>
+              <h2 id="cta-title">Você não precisa ter todas as respostas para <em>começar.</em></h2>
+              <div className="section-copy"><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
+            </div>
+            <figure className="closing-photo" data-reveal><img src="larissa-convite.jpg" alt="Larissa Menezes sorrindo, sentada à mesa" width="768" height="1024" loading="lazy" decoding="async" /></figure>
           </div>
         </section>
       </main>
