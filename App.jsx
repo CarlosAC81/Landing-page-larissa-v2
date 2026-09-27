@@ -15,10 +15,10 @@
 const { useEffect, useLayoutEffect, useState, useRef } = React;
 
 // Troque este número pelo WhatsApp real da profissional, usando o formato internacional.
-const WHATSAPP_URL = "https://wa.me/5500000000000?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20a%20terapia.";
+const WHATSAPP_URL = "https://wa.me/5511985736871";
 
 // Troque pelo endereço real do perfil do Instagram.
-const INSTAGRAM_URL = "https://instagram.com/seuusuario";
+const INSTAGRAM_URL = "https://instagram.com/psico.larissamenezes";
 
 // Ícone em SVG do WhatsApp, mantido no próprio React para não depender de bibliotecas externas.
 function WhatsAppIcon({ size = 20 }) {
@@ -101,10 +101,10 @@ function App() {
   const typingText = "me chama no WhatsApp";
   const [feedbackIndex, setFeedbackIndex] = useState(0);
   const feedbacks = [
-    { quote: "Substitua este texto pelo feedback autorizado de uma paciente.", author: "Nome ou iniciais", detail: "Paciente de terapia online" },
-    { quote: "Adicione aqui outro depoimento real, sempre com autorização.", author: "Nome ou iniciais", detail: "Paciente de terapia online" },
-    { quote: "Este espaço pode reunir percepções sobre acolhimento e processo.", author: "Nome ou iniciais", detail: "Paciente de terapia online" },
-    { quote: "Substitua por um quarto depoimento real, também autorizado pela paciente.", author: "Nome ou iniciais", detail: "Paciente de terapia online" }
+    { quote: "Eu não acreditava na terapia, mas depois de algumas sessões com Larissa, estou vivendo a melhor fase da minha vida.", author: "Mulher", detail: "67 anos" },
+    { quote: "A Lari tem sido muito importante no meu processo de amadurecimento e autoconfiança pra tomar decisões.”, author: "Mulher", detail: "17 anos" },
+    { quote: "Através das sessões com a psicóloga Larissa, estou conseguindo me posicionar quando é preciso pela primeira vez da vida.”, author: "Mulher", detail: "44 anos" },
+    { quote: "A Larissa tem me ajudado muito a passar pelos desafios, me entender e entender a história da minha família.", author: "Homem", detail: "23 anos" }
   ];
 
   // Guarda o ponto onde o toque começou, para reconhecer um "swipe" horizontal
@@ -279,7 +279,7 @@ function App() {
               <h1 id="hero-title" className="hero-anim">Um espaço para <em>você</em> se escutar.</h1>
               {/* Mobile: a foto aparece logo depois do título e antes da descrição. */}
               <HeroArtwork className="hero-mobile-visual" priority />
-              <p className="hero-description hero-anim">Terapia é um encontro cuidadoso com a sua própria história. Vamos construir, no seu tempo, caminhos mais leves e possíveis.</p>
+              <p className="hero-description hero-anim">Psicoterapia é um encontro cuidadoso com a sua história. É acreditar que é possível construir novos caminhos, com leveza e sentido.</p>
 
               <div className="hero-actions hero-anim">
                 <a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Quero começar <ArrowIcon /></a>
@@ -300,9 +300,9 @@ function App() {
             </div>
 
             <div className="section-copy about-copy" data-reveal>
-              <p>Olá, eu sou Larissa. Psicóloga clínica e especialista em Terapia Cognitivo-Comportamental. Acredito que olhar para dentro não precisa ser um caminho solitário — e que pequenas mudanças, feitas com cuidado, transformam a forma como vivemos.</p>
-              <p>Meu trabalho é oferecer um lugar seguro, sem julgamentos e com escuta genuína, para que você possa compreender seus padrões, elaborar o que sente e encontrar novas possibilidades para o cotidiano.</p>
-              <p className="professional-note"><strong>CRP 00/00000</strong> · Psicóloga clínica</p>
+              <p>Olá, eu sou Larissa. Psicóloga formada pela Universidade Presbiteriana Mackenzie e especializada em Psicanálise pelo Núcleo Brasileiro de Psicanálise. Acredito que olhar para dentro é permitir-se transformar a forma como vivemos. 
+… para que você possa compreender seus padrões, elaborar o que passou e aprender formas saudáveis de lidar com seus sentimentos.</p>
+              <p className="professional-note"><strong>CRP 06/220176</strong> · Psicóloga clínica</p>
             </div>
           </div>
         </section>
@@ -310,12 +310,12 @@ function App() {
         {/* Abordagem e atendimento agora formam uma única seção. */}
         <section id="atendimento" className="section section-blue" aria-labelledby="atendimento-title" data-reveal-group>
           <div className="container section-grid">
-            <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Clareza para entender. <em>Cuidado</em> para transformar.</h2></div>
+            <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Profissionalismo com acolhimento.<em>Técnica</em> com humanidade.</h2></div>
             <div className="section-copy">
               <div className="cards" ref={cardsRef} onScroll={handleCardsScroll} aria-label="Abordagem e atendimentos">
-                <article className="card intro-card" data-reveal><span className="card-number">01</span><h3>Terapia Cognitivo-Comportamental</h3><p>A Terapia Cognitivo-Comportamental é uma abordagem prática e colaborativa. Juntos, vamos observar a relação entre pensamentos, emoções e comportamentos para construir estratégias que façam sentido para a sua vida.</p></article>
+                <article className="card intro-card" data-reveal><span className="card-number">01</span><h3>Abordagem Psicanalítica</h3><p>A abordagem psicanalítica é um espaço de escuta e reflexão. Juntos, vamos olhar para pensamentos, emoções e experiências para compreender os sentidos por trás do que você vive e construir novas formas de se relacionar consigo e com a sua história.</p></article>
                 <article className="card" data-reveal><span className="card-number">02</span><h3>Escuta sem pressa</h3><p>Um espaço para você chegar como está, com respeito à sua singularidade.</p></article>
-                <article className="card accent" data-reveal><span className="card-number">03</span><h3>Construção conjunta</h3><p>Objetivos claros e ferramentas para levar o cuidado para a rotina.</p></article>
+                <article className="card accent" data-reveal><span className="card-number">03</span><h3>Construção conjunta</h3><p>Perceber padrões, nomear conflitos e investigar suas dúvidas com gentileza.</p></article>
                 <article className="card online-card" data-reveal><span className="card-number">04</span><h3>Terapia online</h3><p>Sessões exclusivamente online, com conforto, privacidade e flexibilidade para cuidar de si onde estiver.</p></article>
               </div>
               <div className="card-controls" aria-label="Controles dos atendimentos">
@@ -330,7 +330,7 @@ function App() {
         {/* Feedbacks editáveis em carrossel; substitua os textos pelos depoimentos autorizados. */}
         <section id="feedbacks" className="section feedback-section" aria-labelledby="feedbacks-title" data-reveal-group>
           <div className="container feedback-layout">
-            <div data-reveal><SectionLabel>Experiências</SectionLabel><h2 id="feedbacks-title">Palavras que <em>acolhem.</em></h2></div>
+            <div data-reveal><SectionLabel>Experiências</SectionLabel><h2 id="feedbacks-title">Palavras que <em>aquecem.</em></h2></div>
             <div className="feedback-carousel" data-reveal aria-roledescription="carrossel" aria-label="Feedbacks de pacientes">
               <article
                 className="feedback-card"
@@ -385,7 +385,7 @@ function App() {
         <div className="container footer-inner">
           <strong className="logo">Larissa <span>Menezes</span></strong>
           <a className="instagram-link" href={INSTAGRAM_URL} target="_blank" rel="noreferrer" aria-label="Instagram da psicóloga"><InstagramIcon size={20} /><span>@seuusuario</span></a>
-          <span>© 2026 · Psicologia clínica</span>
+          <span>© 2026 · Psicologia Clínica</span>
         </div>
       </footer>
     </div>
