@@ -8,7 +8,7 @@
 
   As animações de entrada, os efeitos discretos de rolagem e os microinterações de
   hover usam GSAP + ScrollTrigger (carregados via CDN no index.html). A biblioteca
-  respeita "prefers-reduced-motion": quem prefere menos movimento não recebe as
+  respeita "prefers-reduced-motion": quem prefere mnos movimento não recebe as
   animações (veja o uso de gsap.matchMedia abaixo e o styles.css).
 */
 
