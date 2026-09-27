@@ -77,10 +77,19 @@ function HeroArtwork({ className, priority }) {
 function App() {
   // Controla a abertura do menu em telas pequenas.
   const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") { setMenuOpen(false); document.querySelector(".menu-button")?.focus(); }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
 
   // Controla qual pergunta do FAQ está aberta.
   const [openFaq, setOpenFaq] = useState(0);
   const [cardIndex, setCardIndex] = useState(0);
+  const [cardsPlaying, setCardsPlaying] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const cardsRef = useRef(null);
   // Guarda o sentido atual (1 = direita, -1 = esquerda) e as pausas por interação.
   const cardsAutoScrollRef = useRef({ direction: 1, paused: false, resumeTimer: null });
@@ -117,8 +126,7 @@ function App() {
   useEffect(() => {
     const list = cardsRef.current;
     if (!list) return undefined;
-    const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return undefined;
+    if (!cardsPlaying) return undefined;
 
     const speed = 30; // pixels por segundo
     let rafId = null;
@@ -144,6 +152,10 @@ function App() {
     list.addEventListener("touchstart", handleInteractionStart, { passive: true });
     list.addEventListener("touchend", handleInteractionEnd, { passive: true });
     list.addEventListener("pointerdown", handleInteractionStart);
+    list.addEventListener("focusin", handleInteractionStart);
+    list.addEventListener("focusout", handleInteractionEnd);
+    list.addEventListener("mouseenter", handleInteractionStart);
+    list.addEventListener("mouseleave", handleInteractionEnd);
     window.addEventListener("pointerup", handleInteractionEnd);
     rafId = window.requestAnimationFrame(step);
 
@@ -153,14 +165,19 @@ function App() {
       list.removeEventListener("touchstart", handleInteractionStart);
       list.removeEventListener("touchend", handleInteractionEnd);
       list.removeEventListener("pointerdown", handleInteractionStart);
+      list.removeEventListener("focusin", handleInteractionStart);
+      list.removeEventListener("focusout", handleInteractionEnd);
+      list.removeEventListener("mouseenter", handleInteractionStart);
+      list.removeEventListener("mouseleave", handleInteractionEnd);
       window.removeEventListener("pointerup", handleInteractionEnd);
     };
-  }, []);
+  }, [cardsPlaying]);
 
   // Texto usado na animação de digitação do CTA do hero.
   const [typedText, setTypedText] = useState("");
   const typingText = "me chama no WhatsApp";
   const [feedbackIndex, setFeedbackIndex] = useState(0);
+  const [feedbackPaused, setFeedbackPaused] = useState(false);
   const feedbacks = [
     { quote: "Eu não acreditava na terapia, mas depois de algumas sessões com Larissa, estou vivendo a melhor fase da minha vida.", author: "Mulher", detail: "67 anos" },
     { quote: "A Lari tem sido muito importante no meu processo de amadurecimento e autoconfiança pra tomar decisões.", author: "Mulher", detail: "17 anos" },
@@ -201,11 +218,12 @@ function App() {
 
   // Troca o feedback automaticamente; os controles manuais e o gesto de arrastar continuam disponíveis.
   useEffect(() => {
+    if (feedbackPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
     const timer = window.setInterval(() => {
       setFeedbackIndex((current) => (current + 1) % feedbacks.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [feedbackPaused]);
 
   // Perguntas e respostas frequentes exibidas na seção de dúvidas.
   const faqItems = [
@@ -293,6 +311,7 @@ function App() {
 
   return (
     <div>
+      <a className="skip-link" href="#top">Pular para o conteúdo</a>
       {/* Transição em degradê: cobre a tela ao carregar e some suavemente; também
           dá um leve "flash" a cada clique nos links do menu, como uma passagem
           elegante entre seções (o site é uma página única, sem rotas separadas). */}
@@ -312,13 +331,13 @@ function App() {
 
           <a className="header-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar conversa ↗</a>
 
-          <button className="menu-button" type="button" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+          <button className="menu-button" type="button" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? "×" : "☰"}
           </button>
         </div>
 
         {menuOpen && (
-          <nav className="mobile-menu" aria-label="Navegação mobile">
+          <nav id="mobile-menu" className="mobile-menu" aria-label="Navegação mobile">
             <a href="#sobre" onClick={handleMobileNavClick}>Sobre mim</a>
             <a href="#atendimento" onClick={handleMobileNavClick}>Abordagem e atendimentos</a>
             <a href="#feedbacks" onClick={handleMobileNavClick}>Feedbacks</a>
@@ -328,7 +347,7 @@ function App() {
         )}
       </header>
 
-      <main id="top">
+      <main id="top" tabIndex="-1">
         {/* Hero usando a foto real enviada pela profissional. */}
         <section className="hero" aria-labelledby="hero-title">
           {/* Desktop: a arte fica menor e separada da coluna de texto. */}
@@ -371,15 +390,16 @@ function App() {
         {/* Abordagem e atendimento agora formam uma única seção. */}
         <section id="atendimento" className="section section-blue" aria-labelledby="atendimento-title" data-reveal-group>
           <div className="container approach-layout">
-            <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Profissionalismo com acolhimento. <em>Técnica</em> com humanidade.</h2></div>
+            <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Profissionalismo com <em>acolhimento</em>. Técnica com <em>humanidade</em>.</h2></div>
             <div className="section-copy">
-              <div className="cards" ref={cardsRef} onScroll={handleCardsScroll} aria-label="Abordagem e atendimentos">
+              <div id="cards-atendimento" className="cards" ref={cardsRef} onScroll={handleCardsScroll} role="region" aria-roledescription="carrossel" aria-label="Abordagem e atendimentos" tabIndex="0">
                 <article className="card intro-card" data-reveal><span className="card-number">01</span><h3>Abordagem Psicanalítica</h3><p>A abordagem psicanalítica é um espaço de escuta e reflexão. Juntos, vamos olhar para pensamentos, emoções e experiências para compreender os sentidos por trás do que você vive e construir novas formas de se relacionar consigo e com a sua história.</p></article>
                 <article className="card" data-reveal><span className="card-number">02</span><h3>Escuta sem pressa</h3><p>Um espaço para você chegar como está, com respeito à sua singularidade.</p></article>
                 <article className="card accent" data-reveal><span className="card-number">03</span><h3>Construção conjunta</h3><p>Perceber padrões, nomear conflitos e investigar suas dúvidas com gentileza.</p></article>
                 <article className="card online-card" data-reveal><span className="card-number">04</span><h3>Terapia online</h3><p>Sessões exclusivamente online, com conforto, privacidade e flexibilidade para cuidar de si onde estiver.</p></article>
               </div>
-              <div className="card-controls" aria-label="Controles dos atendimentos">
+              <div className="card-controls" role="group" aria-label="Controles dos atendimentos">
+                <button type="button" className="pause-cards" aria-label={cardsPlaying ? "Pausar rolagem automática dos cards" : "Retomar rolagem automática dos cards"} aria-controls="cards-atendimento" aria-pressed={!cardsPlaying} onClick={() => setCardsPlaying((playing) => !playing)}>{cardsPlaying ? "Ⅱ" : "▶"}</button>
                 <button type="button" aria-label="Card anterior" disabled={cardIndex === 0} onClick={() => scrollToCard(cardIndex - 1)}>←</button>
                 <span>{String(cardIndex + 1).padStart(2, "0")} / 04</span>
                 <button type="button" aria-label="Próximo card" disabled={cardIndex === 3} onClick={() => scrollToCard(cardIndex + 1)}>→</button>
@@ -392,15 +412,15 @@ function App() {
         <section id="feedbacks" className="section feedback-section" aria-labelledby="feedbacks-title" data-reveal-group>
           <div className="container feedback-layout">
             <div data-reveal><SectionLabel>Experiências</SectionLabel><h2 id="feedbacks-title">Palavras que <em>aquecem.</em></h2></div>
-            <div className="feedback-carousel" data-reveal aria-roledescription="carrossel" aria-label="Feedbacks de pacientes">
+            <div className="feedback-carousel" data-reveal role="region" aria-roledescription="carrossel" aria-label="Feedbacks de pacientes" onMouseEnter={() => setFeedbackPaused(true)} onMouseLeave={() => setFeedbackPaused(false)} onFocusCapture={() => setFeedbackPaused(true)} onBlurCapture={() => setFeedbackPaused(false)}>
               <article
                 className="feedback-card"
                 key={feedbackIndex}
-                aria-live="polite"
+                aria-live="off"
                 onTouchStart={handleFeedbackTouchStart}
                 onTouchEnd={handleFeedbackTouchEnd}
               >
-                <span className="feedback-quote">“</span>
+                <span className="feedback-quote" aria-hidden="true">“</span>
                 <p>“{feedbacks[feedbackIndex].quote}”</p>
                 <strong>{feedbacks[feedbackIndex].author}</strong>
                 <small>{feedbacks[feedbackIndex].detail}</small>
@@ -421,8 +441,8 @@ function App() {
             <div className="faq-list">
               {faqItems.map((item, index) => (
                 <div className="faq-item" key={item.question} data-reveal>
-                  <button className="faq-question" type="button" aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? null : index)}>{item.question}<span>{openFaq === index ? "−" : "+"}</span></button>
-                  {openFaq === index && <p className="faq-answer">{item.answer}</p>}
+                  <h3 className="faq-heading"><button className="faq-question" type="button" aria-expanded={openFaq === index} aria-controls={`faq-answer-${index}`} onClick={() => setOpenFaq(openFaq === index ? null : index)}>{item.question}<span aria-hidden="true">{openFaq === index ? "−" : "+"}</span></button></h3>
+                  <div id={`faq-answer-${index}`} hidden={openFaq !== index}><p className="faq-answer">{item.answer}</p></div>
                 </div>
               ))}
             </div>
@@ -432,12 +452,12 @@ function App() {
         {/* CTA final para aumentar as chances de contato. */}
         <section className="section section-dark" aria-labelledby="cta-title" data-reveal-group>
           <div className="container closing-layout">
-            <div className="closing-content" data-reveal>
+            <div className="closing-heading" data-reveal>
               <SectionLabel>Um primeiro passo</SectionLabel>
               <h2 id="cta-title">Você não precisa ter todas as respostas para <em>começar.</em></h2>
-              <div className="section-copy"><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
             </div>
             <figure className="closing-photo" data-reveal><img src="larissa-convite.jpg" alt="Larissa Menezes sorrindo, sentada à mesa" width="768" height="1024" loading="lazy" decoding="async" /></figure>
+            <div className="closing-copy section-copy" data-reveal><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
           </div>
         </section>
       </main>
