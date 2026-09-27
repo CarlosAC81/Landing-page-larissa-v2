@@ -102,8 +102,8 @@ function App() {
   const [feedbackIndex, setFeedbackIndex] = useState(0);
   const feedbacks = [
     { quote: "Eu não acreditava na terapia, mas depois de algumas sessões com Larissa, estou vivendo a melhor fase da minha vida.", author: "Mulher", detail: "67 anos" },
-    { quote: "A Lari tem sido muito importante no meu processo de amadurecimento e autoconfiança pra tomar decisões.”, author: "Mulher", detail: "17 anos" },
-    { quote: "Através das sessões com a psicóloga Larissa, estou conseguindo me posicionar quando é preciso pela primeira vez da vida.”, author: "Mulher", detail: "44 anos" },
+    { quote: "A Lari tem sido muito importante no meu processo de amadurecimento e autoconfiança pra tomar decisões.", author: "Mulher", detail: "17 anos" },
+    { quote: "Através das sessões com a psicóloga Larissa, estou conseguindo me posicionar quando é preciso pela primeira vez da vida.", author: "Mulher", detail: "44 anos" },
     { quote: "A Larissa tem me ajudado muito a passar pelos desafios, me entender e entender a história da minha família.", author: "Homem", detail: "23 anos" }
   ];
 
@@ -146,12 +146,12 @@ function App() {
     return () => window.clearInterval(timer);
   }, []);
 
-  // Perguntas frequentes exibidas na seção de dúvidas.
+  // Perguntas e respostas frequentes exibidas na seção de dúvidas.
   const faqItems = [
-    "Como funciona a primeira sessão?",
-    "Quanto tempo dura o processo terapêutico?",
-    "A terapia online é para mim?",
-    "Como agendo um horário?"
+    { question: "Como funciona a primeira sessão?", answer: "A primeira sessão é um momento de conversa e acolhimento. Vamos entender o que trouxe você até aqui, conhecer suas expectativas e combinar juntos os próximos passos — com leveza e sem pressa." },
+    { question: "Quanto tempo dura o processo terapêutico?", answer: "Cada processo é único e não existe um tempo pré-determinado. A duração da terapia depende das necessidades e objetivos do paciente, enquanto acompanhando seus avanços ao longo do caminho." },
+    { question: "A terapia online é para mim?", answer: "A psicoterapia online pode ser uma ótima opção para quem busca praticidade e conforto. As sessões acontecem por videochamada, em um ambiente reservado, onde você se sinta confortável para falar sobre o que precisar." },
+    { question: "Como agendo um horário?", answer: "Para agendar sua primeira sessão, é só entrar em contato diretamente comigo pelo meu WhatsApp. Vamos conversar sobre sua disponibilidade e encontrar um horário que funcione para você." }
   ];
 
   // Fecha o menu mobile depois que a pessoa escolhe uma âncora, e dá um breve
@@ -310,7 +310,7 @@ function App() {
         {/* Abordagem e atendimento agora formam uma única seção. */}
         <section id="atendimento" className="section section-blue" aria-labelledby="atendimento-title" data-reveal-group>
           <div className="container section-grid">
-            <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Profissionalismo com acolhimento.<em>Técnica</em> com humanidade.</h2></div>
+            <div data-reveal><SectionLabel>Abordagem e atendimentos</SectionLabel><h2 id="atendimento-title">Profissionalismo com acolhimento. <em>Técnica</em> com humanidade.</h2></div>
             <div className="section-copy">
               <div className="cards" ref={cardsRef} onScroll={handleCardsScroll} aria-label="Abordagem e atendimentos">
                 <article className="card intro-card" data-reveal><span className="card-number">01</span><h3>Abordagem Psicanalítica</h3><p>A abordagem psicanalítica é um espaço de escuta e reflexão. Juntos, vamos olhar para pensamentos, emoções e experiências para compreender os sentidos por trás do que você vive e construir novas formas de se relacionar consigo e com a sua história.</p></article>
@@ -358,10 +358,10 @@ function App() {
           <div className="container section-grid">
             <div data-reveal><SectionLabel>Antes de começar</SectionLabel><h2 id="duvidas-title">Dúvidas <em>comuns.</em></h2></div>
             <div className="faq-list">
-              {faqItems.map((question, index) => (
-                <div className="faq-item" key={question} data-reveal>
-                  <button className="faq-question" type="button" aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? null : index)}>{question}<span>{openFaq === index ? "−" : "+"}</span></button>
-                  {openFaq === index && <p className="faq-answer">A primeira sessão é um momento de conversa e acolhimento. Vamos entender o que trouxe você até aqui, conhecer suas expectativas e combinar juntos os próximos passos — com leveza e sem pressa.</p>}
+              {faqItems.map((item, index) => (
+                <div className="faq-item" key={item.question} data-reveal>
+                  <button className="faq-question" type="button" aria-expanded={openFaq === index} onClick={() => setOpenFaq(openFaq === index ? null : index)}>{item.question}<span>{openFaq === index ? "−" : "+"}</span></button>
+                  {openFaq === index && <p className="faq-answer">{item.answer}</p>}
                 </div>
               ))}
             </div>
