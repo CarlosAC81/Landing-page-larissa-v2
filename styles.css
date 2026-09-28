@@ -145,6 +145,25 @@ em { color: var(--green-ink); }
 .video-heading { max-width: 520px; margin-bottom: 38px; }
 .video-heading h2 { margin: 0; font-size: clamp(54px, 7vw, 84px); line-height: .95; letter-spacing: -.06em; }
 .about-copy { max-width: 650px; }
+/* Foto apenas no desktop: meia-lua à direita; texto conserva o fundo original. */
+@media (min-width: 761px) {
+  .section-video { overflow: hidden; }
+  .section-video::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 49%;
+    border-radius: 55% 0 0 55% / 50% 0 0 50%;
+    background: url("larissa-meia-lua.jpg") 68% center / cover no-repeat;
+    pointer-events: none;
+  }
+  .section-video .container { position: relative; z-index: 1; }
+  .section-video .video-heading,
+  .section-video .about-copy { max-width: min(47%, 520px); }
+}
+
 .professional-note { margin-top: 30px; color: var(--navy); }
 .professional-note strong { font-family: var(--font-display); font-size: 25px; font-weight: 400; }
 
