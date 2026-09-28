@@ -89,7 +89,6 @@ function App() {
   // Controla qual pergunta do FAQ está aberta.
   const [openFaq, setOpenFaq] = useState(0);
   const [cardIndex, setCardIndex] = useState(0);
-  const [cardsPlaying, setCardsPlaying] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const cardsRef = useRef(null);
   // Guarda o sentido atual (1 = direita, -1 = esquerda) e as pausas por interação.
   const cardsAutoScrollRef = useRef({ direction: 1, paused: false, resumeTimer: null });
@@ -126,7 +125,7 @@ function App() {
   useEffect(() => {
     const list = cardsRef.current;
     if (!list) return undefined;
-    if (!cardsPlaying) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
     const speed = 30; // pixels por segundo
     let rafId = null;
@@ -171,7 +170,7 @@ function App() {
       list.removeEventListener("mouseleave", handleInteractionEnd);
       window.removeEventListener("pointerup", handleInteractionEnd);
     };
-  }, [cardsPlaying]);
+  }, []);
 
   // Texto usado na animação de digitação do CTA do hero.
   const [typedText, setTypedText] = useState("");
@@ -399,7 +398,6 @@ function App() {
                 <article className="card online-card" data-reveal><span className="card-number">04</span><h3>Terapia online</h3><p>Sessões exclusivamente online, com conforto, privacidade e flexibilidade para cuidar de si onde estiver.</p></article>
               </div>
               <div className="card-controls" role="group" aria-label="Controles dos atendimentos">
-                <button type="button" className="pause-cards" aria-label={cardsPlaying ? "Pausar rolagem automática dos cards" : "Retomar rolagem automática dos cards"} aria-controls="cards-atendimento" aria-pressed={!cardsPlaying} onClick={() => setCardsPlaying((playing) => !playing)}>{cardsPlaying ? "Ⅱ" : "▶"}</button>
                 <button type="button" aria-label="Card anterior" disabled={cardIndex === 0} onClick={() => scrollToCard(cardIndex - 1)}>←</button>
                 <span>{String(cardIndex + 1).padStart(2, "0")} / 04</span>
                 <button type="button" aria-label="Próximo card" disabled={cardIndex === 3} onClick={() => scrollToCard(cardIndex + 1)}>→</button>
