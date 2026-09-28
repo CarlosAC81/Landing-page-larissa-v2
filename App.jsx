@@ -454,7 +454,7 @@ function App() {
               <SectionLabel>Um primeiro passo</SectionLabel>
               <h2 id="cta-title">Você não precisa ter todas as respostas para <em>começar.</em></h2>
             </div>
-            <figure className="closing-photo" data-reveal><img src="larissa-convite.jpeg" alt="Larissa Menezes sorrindo, sentada à mesa" width="768" height="1024" loading="lazy" decoding="async" /></figure>
+            <figure className="closing-photo" data-reveal><img src="larissa-convite.JPEG" alt="Larissa Menezes sorrindo, sentada à mesa" width="768" height="1024" loading="lazy" decoding="async" /></figure>
             <div className="closing-copy section-copy" data-reveal><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
           </div>
         </section>
