@@ -158,6 +158,13 @@ em { color: var(--green-ink); }
     border-radius: 55% 0 0 55% / 50% 0 0 50%;
     background: url("larissa-meia-lua.jpg") 68% center / cover no-repeat;
     pointer-events: none;
+    /* Fade suave no comeco e no fim da imagem */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
   }
   .section-video .container { position: relative; z-index: 1; }
   .section-video .video-heading,
