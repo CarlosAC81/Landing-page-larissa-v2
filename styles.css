@@ -145,26 +145,21 @@ em { color: var(--green-ink); }
 .video-heading { max-width: 520px; margin-bottom: 38px; }
 .video-heading h2 { margin: 0; font-size: clamp(54px, 7vw, 84px); line-height: .95; letter-spacing: -.06em; }
 .about-copy { max-width: 650px; }
-/* Foto apenas no desktop: meia-lua à direita; texto conserva o fundo original. */
+/* Foto apenas no desktop: a imagem cobre a seção inteira como fundo, e um
+   degradê brusco do creme do site cobre a área do texto (da esquerda até o
+   meio), fazendo a foto aparecer com força à direita e as letras ganharem
+   destaque total à esquerda. No mobile a seção continua sem imagem. */
 @media (min-width: 761px) {
-  .section-video { overflow: hidden; }
-  .section-video::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 49%;
-    border-radius: 55% 0 0 55% / 50% 0 0 50%;
-    background: url("larissa-meia-lua.jpg") 68% center / cover no-repeat;
-    pointer-events: none;
-    /* Fade suave no comeco e no fim da imagem */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 95%, rgba(0, 0, 0, 0.45) 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 95%, rgba(0, 0, 0, 0.45) 100%);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%;
-    mask-size: 100% 100%;
+  .section-video {
+    overflow: hidden;
+    background:
+      linear-gradient(to right,
+        var(--yellow-soft) 0%,
+        var(--yellow-soft) 38%,
+        rgba(255, 250, 229, .92) 46%,
+        rgba(255, 250, 229, 0) 58%),
+      url("sobre-background.jpg") right center / cover no-repeat,
+      var(--yellow-soft);
   }
   .section-video .container { position: relative; z-index: 1; }
   .section-video .video-heading,
