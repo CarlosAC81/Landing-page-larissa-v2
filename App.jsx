@@ -181,7 +181,7 @@ function App() {
     { quote: "Eu não acreditava na terapia, mas depois de algumas sessões com Larissa, estou vivendo a melhor fase da minha vida.", author: "Mulher", detail: "67 anos" },
     { quote: "A Lari tem sido muito importante no meu processo de amadurecimento e autoconfiança pra tomar decisões.", author: "Mulher", detail: "17 anos" },
     { quote: "Através das sessões com a psicóloga Larissa, estou conseguindo me posicionar quando é preciso pela primeira vez da vida.", author: "Mulher", detail: "44 anos" },
-    { quote: "A Larissa tem me ajudado muito a passar pelos desafios, me entender e entender a história da minha família.", author: "Homem", detail: "23 anos" }
+    { quote: "A Larissa tem me ajudado muito a passar pelos desafios, me entender e entender a história da minha família.", author: "Mulher", detail: "23 anos" }
   ];
 
   // Guarda o ponto onde o toque começou, para reconhecer um "swipe" horizontal
@@ -379,8 +379,8 @@ function App() {
             </div>
 
             <div className="section-copy about-copy" data-reveal>
-              <p>Olá, eu sou Larissa. Psicóloga formada pela Universidade Presbiteriana Mackenzie e especializada em Psicanálise pelo Núcleo Brasileiro de Psicanálise. Acredito que olhar para dentro é permitir-se transformar a forma como vivemos.</p>
-              <p>Meu trabalho é oferecer um lugar seguro, sem julgamentos e com escuta genuína, para que você possa compreender seus padrões, elaborar o que passou e aprender formas saudáveis de lidar com seus sentimentos.</p>
+              <p>Olá, eu sou Larissa. Psicóloga formada pela Universidade Presbiteriana Mackenzie e especializada em Psicanálise pelo Núcleo Brasileiro de Psicanálise. Acredito que olhar para dentro é permitir transformar a forma como vivemos.</p>
+              <p>Meu trabalho é oferecer um espaço de acolhimento e escuta genuína para você que está acostumada a dar conta de tudo. Olharemos com mais carinho para sua própria história, a fim de compreender seus sentimentos e construir uma relação mais leve com a vida.</p>
               <p className="professional-note"><strong>CRP 06/220176</strong> · Psicóloga Clínica</p>
             </div>
           </div>
@@ -454,7 +454,7 @@ function App() {
               <SectionLabel>Um primeiro passo</SectionLabel>
               <h2 id="cta-title">Você não precisa ter todas as respostas para <em>começar.</em></h2>
             </div>
-            <figure className="closing-photo" data-reveal><img src="larissa-convite.JPEG" alt="Larissa Menezes sorrindo, sentada à mesa" width="768" height="1024" loading="lazy" decoding="async" /></figure>
+            <figure className="closing-photo" data-reveal><img src="hero-larissa.jpg" alt="Larissa Menezes sentada à mesa" width="768" height="1024" loading="lazy" decoding="async" /></figure>
             <div className="closing-copy section-copy" data-reveal><p>Vamos conversar sobre o que você está vivendo e descobrir se este espaço pode fazer sentido para você.</p><a className="primary-button" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Agendar uma conversa <ArrowIcon /></a></div>
           </div>
         </section>
