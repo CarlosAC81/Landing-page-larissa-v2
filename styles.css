@@ -141,7 +141,7 @@ em { color: var(--green-ink); }
 /* ==============================
    VÍDEO E APRESENTAÇÃO
    ============================== */
-.section-video { --section-from: var(--blue-soft); background: var(--yellow-soft); }
+.section-video { --section-from: var(--navy); background: var(--yellow-soft); }
 .video-heading { max-width: 520px; margin-bottom: 38px; }
 .video-heading h2 { margin: 0; font-size: clamp(54px, 7vw, 84px); line-height: .95; letter-spacing: -.06em; }
 .about-copy { max-width: 650px; }
@@ -175,6 +175,8 @@ em { color: var(--green-ink); }
 .section { position: relative; padding: 120px 0; }
 .section::before { content: ""; position: absolute; inset: -1px 0 auto; height: 32px; pointer-events: none; background: linear-gradient(to bottom, var(--section-from), var(--section-to)); }
 .section-video { --section-to: var(--yellow-soft); }
+/* Transição da abertura azul-escura sobre o fundo real da segunda seção. */
+.hero + .section-video::before { background: linear-gradient(to bottom, var(--navy), transparent); }
 .section-blue { --section-from: var(--yellow-soft); --section-to: var(--blue-soft); background: var(--blue-soft); }
 .section-yellow { --section-from: var(--yellow-soft); --section-to: var(--yellow); background: var(--yellow); }
 .section-dark { --section-from: var(--yellow); --section-to: var(--navy); background: var(--navy); color: var(--yellow-soft); }
