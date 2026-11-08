@@ -113,7 +113,7 @@ button { font: inherit; }
    estreita, para que as letras nunca cheguem a encostar na foto antes de
    chegar no layout mobile.
    ============================== */
-.hero { position: relative; min-height: 760px; padding: 150px 0 90px; overflow: hidden; background: var(--blue-soft); }
+.hero { position: relative; min-height: 760px; padding: 150px 0 90px; overflow: hidden; background: var(--navy); color: var(--yellow-soft); }
 .hero-content { position: relative; z-index: 1; max-width: min(560px, 46vw); }
 .hero-visual { position: absolute; top: 150px; right: 4.5%; bottom: 110px; z-index: 1; display: block; width: clamp(200px, 34vw, 540px); pointer-events: none; }
 .hero-svg { display: block; width: 100%; height: 100%; min-height: 0; overflow: hidden; border-radius: 34px; box-shadow: 0 22px 48px rgba(9,36,53,.16); }
@@ -468,3 +468,12 @@ a:focus-visible, button:focus-visible, .cards:focus-visible {
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 .site-footer .logo span { color: var(--green); }
 .whatsapp-type { color: var(--green-ink); }
+
+/* Primeira seção: mesma paleta efetiva do convite final, sem alterar as demais.
+   A plaquinha com o nome (.hero-sign) continua clara, sobre a foto. */
+.hero em { color: var(--green); }
+.hero .hero-description { color: rgba(255,250,229,.68); }
+.hero .hero-note { color: var(--yellow-soft); }
+.hero .eyebrow { background: var(--navy); color: var(--yellow-soft); border-color: var(--green); }
+.hero .whatsapp-type { background: var(--navy); color: var(--green); outline: 1px solid var(--green); }
+.hero a:focus-visible, .section-dark a:focus-visible { outline-color: var(--green); }
