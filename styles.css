@@ -183,8 +183,22 @@ em { color: var(--green-ink); }
 .section { position: relative; padding: 120px 0; }
 .section::before { content: ""; position: absolute; inset: -1px 0 auto; height: 32px; pointer-events: none; background: linear-gradient(to bottom, var(--section-from), var(--section-to)); }
 .section-video { --section-to: var(--yellow-soft); }
-/* Transição da abertura azul-escura sobre o fundo real da segunda seção. */
-.hero + .section-video::before { background: linear-gradient(to bottom, var(--navy), transparent); }
+/* Transição contínua, sem recorte nas bordas. */
+.hero + .section-video { overflow: visible; }
+.hero + .section-video::before {
+  inset: -2px 0 auto;
+  height: 82px;
+  background: linear-gradient(to bottom,
+    var(--navy) 4%,
+    color-mix(in srgb, var(--navy) 98%, transparent) 12%,
+    color-mix(in srgb, var(--navy) 90%, transparent) 24%,
+    color-mix(in srgb, var(--navy) 74%, transparent) 38%,
+    color-mix(in srgb, var(--navy) 50%, transparent) 50%,
+    color-mix(in srgb, var(--navy) 26%, transparent) 62%,
+    color-mix(in srgb, var(--navy) 10%, transparent) 76%,
+    color-mix(in srgb, var(--navy) 2%, transparent) 88%,
+    color-mix(in srgb, var(--navy) 0%, transparent) 100%);
+}
 .section-blue { --section-from: var(--yellow-soft); --section-to: var(--blue-soft); background: var(--blue-soft); }
 .section-yellow { --section-from: var(--yellow-soft); --section-to: var(--yellow); background: var(--yellow); }
 .section-dark { --section-from: var(--yellow); --section-to: var(--navy); background: var(--navy); color: var(--yellow-soft); }
